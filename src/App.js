@@ -15,7 +15,6 @@ function App() {
 
   const handleCaptchaVerify = (token) => {
     if (token) {
-      setCaptchaVerified(true);
       window.open('https://wa.me/6281219456916', '_blank');
       setShowCaptcha(false);
     }
