@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import { SiNotion } from 'react-icons/si';
 import {
-  FaInstagram, FaLinkedin, FaGithub,
+  FaLinkedin, FaGithub,
   FaGlobe, FaWhatsapp, FaMoon, FaSun
 } from 'react-icons/fa';
-import { IoMdClose } from 'react-icons/io'; // Tambahkan ini
+import { IoMdClose } from 'react-icons/io';
 import ReCAPTCHA from 'react-google-recaptcha';
 import './index.css';
 
 function App() {
-  const [dark, setDark] = useState(false);
+  // ✅ Default dark mode aktif
+  const [dark, setDark] = useState(true);
   const [showCaptcha, setShowCaptcha] = useState(false);
 
   const toggleDark = () => setDark(!dark);
@@ -21,23 +23,31 @@ function App() {
   };
 
   const links = [
-    { name: 'Instagram', icon: <FaInstagram />, url: 'https://instagram.com/hugowrtma' },
-    { name: 'Linkedin', icon: <FaLinkedin />, url: 'https://linkedin.com/in/hugowrtma' },
-    { name: 'Github', icon: <FaGithub />, url: 'https://github.com/hugowrtma' },
     { name: 'Website', icon: <FaGlobe />, url: 'https://hugowrtma.site' },
+    { name: 'Github', icon: <FaGithub />, url: 'https://github.com/hugowrtma' },
+    { name: 'Linkedin', icon: <FaLinkedin />, url: 'https://linkedin.com/in/hugowrtma' },
+    { name: 'Notion', icon: <SiNotion />, url: 'https://crystalline-process-b56.notion.site/Oktaryan-Hugo-s-Portofolio-24e3ebd5f49e800daf89c7757c57dc7c' },
     { name: 'WhatsApp', icon: <FaWhatsapp />, url: '' }, // WA handled via captcha
   ];
 
   return (
-    <div className={`${dark ? 'dark' : ''}`}>
-      <div className="min-h-screen bg-[#f8f5f0] dark:bg-[#1f1f1f] 
+    <div>
+      <div
+        className={`min-h-screen 
+        ${dark ? 'bg-[#1f1f1f] text-white' : 'bg-[#f8f5f0] text-[#6d3c27]'} 
         text-center flex flex-col items-center justify-center 
-        px-4 py-10 text-[#6d3c27] dark:text-white 
-        transition-all duration-500 ease-in-out relative">
-
+        px-4 py-10 transition-all duration-300 ease-in-out relative`}
+      >
         {/* Dark mode toggle */}
-        <div className="absolute top-4 right-4 cursor-pointer" onClick={toggleDark}>
-          {dark ? <FaSun className="text-2xl" /> : <FaMoon className="text-2xl" />}
+        <div
+          className="absolute top-4 right-4 cursor-pointer"
+          onClick={toggleDark}
+        >
+          {dark ? (
+            <FaSun className="text-2xl" />
+          ) : (
+            <FaMoon className="text-2xl" />
+          )}
         </div>
 
         {/* Profile */}
@@ -50,7 +60,7 @@ function App() {
 
         {/* Link buttons */}
         <div className="flex flex-col mt-6 gap-4 w-full max-w-xs">
-          {links.map(link => (
+          {links.map((link) => (
             <button
               key={link.name}
               onClick={() => {
@@ -60,9 +70,12 @@ function App() {
                   window.open(link.url, '_blank');
                 }
               }}
-              className="bg-white dark:bg-[#2a2a2a] hover:bg-gray-100 dark:hover:bg-[#3a3a3a] 
-                text-[#6d3c27] dark:text-white font-semibold py-3 px-6 
-                rounded-full shadow-md transition duration-200"
+              className={`font-semibold py-3 px-6 rounded-full shadow-md transition duration-200
+                ${
+                  dark
+                    ? 'bg-[#2a2a2a] text-white hover:bg-[#3a3a3a]'
+                    : 'bg-white text-[#6d3c27] hover:bg-gray-100'
+                }`}
             >
               {link.name}
             </button>
@@ -71,13 +84,13 @@ function App() {
 
         {/* Icons row */}
         <div className="flex gap-6 mt-10 text-2xl">
-          {links.map(link => (
+          {links.map((link) => (
             <a
               key={link.name}
               href={link.name === 'WhatsApp' ? '#' : link.url}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={e => {
+              onClick={(e) => {
                 if (link.name === 'WhatsApp') {
                   e.preventDefault();
                   setShowCaptcha(true);
@@ -93,12 +106,16 @@ function App() {
         {/* reCAPTCHA popup */}
         {showCaptcha && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="relative bg-white dark:bg-[#2a2a2a] p-6 rounded-lg shadow-lg text-black dark:text-white">
-
+            <div
+              className={`relative p-6 rounded-lg shadow-lg
+                ${dark ? 'bg-[#2a2a2a] text-white' : 'bg-white text-black'}`}
+            >
               {/* Tombol close */}
               <button
                 onClick={() => setShowCaptcha(false)}
-                className="absolute top-2 right-2 text-2xl text-[#6d3c27] dark:text-white"
+                className={`absolute top-2 right-2 text-2xl ${
+                  dark ? 'text-white' : 'text-[#6d3c27]'
+                }`}
               >
                 <IoMdClose />
               </button>
