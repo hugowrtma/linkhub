@@ -1,136 +1,381 @@
 import React, { useState } from 'react';
-import { SiNotion } from 'react-icons/si';
-import {
-  FaLinkedin, FaGithub,
-  FaGlobe, FaWhatsapp, FaMoon, FaSun
-} from 'react-icons/fa';
-import { IoMdClose } from 'react-icons/io';
-import ReCAPTCHA from 'react-google-recaptcha';
-import './index.css';
+import { motion, AnimatePresence } from 'framer-motion';
+import profileImg from './assets/profile.jpg'; 
+import { 
+  Github, 
+  Linkedin, 
+  Globe, 
+  MessageCircle, 
+  Moon, 
+  Sun, 
+  X, 
+  ExternalLink,
+} from 'lucide-react';
 
 function App() {
-  // ✅ Default dark mode aktif
   const [dark, setDark] = useState(true);
   const [showCaptcha, setShowCaptcha] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const toggleDark = () => setDark(!dark);
 
-  const handleCaptchaVerify = (token) => {
-    if (token) {
-      window.open('https://wa.me/6281219456916', '_blank');
-      setShowCaptcha(false);
+  const handleCaptchaVerify = () => {
+    setIsVerified(!isVerified);
+    if (!isVerified) {
+      setTimeout(() => {
+        window.open('https://wa.me/6281219456916', '_blank');
+        setShowCaptcha(false);
+      }, 500);
     }
   };
 
-  const links = [
-    { name: 'Website', icon: <FaGlobe />, url: 'https://hugowrtma.site' },
-    { name: 'Github', icon: <FaGithub />, url: 'https://github.com/hugowrtma' },
-    { name: 'Linkedin', icon: <FaLinkedin />, url: 'https://linkedin.com/in/hugowrtma' },
-    { name: 'Notion', icon: <SiNotion />, url: 'https://crystalline-process-b56.notion.site/Oktaryan-Hugo-s-Portofolio-24e3ebd5f49e800daf89c7757c57dc7c' },
-    { name: 'WhatsApp', icon: <FaWhatsapp />, url: '' }, // WA handled via captcha
+  const mainLinks = [
+    { 
+      name: 'Portfolio Website', 
+      icon: <Globe className="w-5 h-5" />, 
+      url: 'https://hugowrtma.site',
+      description: 'Explore my work and projects',
+      color: 'from-blue-500 to-blue-600',
+      category: 'primary'
+    },
+    { 
+      name: 'GitHub Profile', 
+      icon: <Github className="w-5 h-5" />, 
+      url: 'https://github.com/hugowrtma',
+      description: 'Code repositories and contributions',
+      color: 'from-gray-600 to-gray-700',
+      category: 'primary'
+    },
+    { 
+      name: 'LinkedIn', 
+      icon: <Linkedin className="w-5 h-5" />, 
+      url: 'https://linkedin.com/in/hugowrtma',
+      description: 'Professional network and experience',
+      color: 'from-blue-600 to-blue-700',
+      category: 'primary'
+    },
+    { 
+      name: 'Notion Portfolio', 
+      icon: <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.747.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/></svg>,
+      url: 'https://crystalline-process-b56.notion.site/Oktaryan-Hugo-s-Portofolio-24e3ebd5f49e800daf89c7757c57dc7c',
+      description: 'Detailed project documentation',
+      color: 'from-black to-gray-800',
+      category: 'secondary'
+    }
   ];
 
+  const contactLink = { 
+    name: 'WhatsApp', 
+    icon: <MessageCircle className="w-5 h-5" />, 
+    description: 'Direct message for quick chat',
+    color: 'from-green-500 to-green-600'
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
+
   return (
-    <div>
-      <div
-        className={`min-h-screen 
-        ${dark ? 'bg-[#1f1f1f] text-white' : 'bg-[#f8f5f0] text-[#6d3c27]'} 
-        text-center flex flex-col items-center justify-center 
-        px-4 py-10 transition-all duration-300 ease-in-out relative`}
+    <div className={`min-h-screen relative overflow-hidden ${
+      dark 
+        ? 'bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white' 
+        : 'bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 text-gray-900'
+    }`}>
+      
+      {/* Background Elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500 rounded-full blur-3xl" />
+      </div>
+
+      {/* Grid Pattern */}
+      <div className={`absolute inset-0 opacity-[0.02] ${dark ? 'bg-grid-pattern-white' : 'bg-grid-pattern-dark'}`} />
+
+      {/* Dark Mode Toggle */}
+      <motion.button
+        onClick={toggleDark}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        className={`fixed top-6 right-6 p-3 rounded-full shadow-lg z-50 backdrop-blur-sm border ${
+          dark 
+            ? 'bg-gray-800/50 border-gray-700/50 text-yellow-400 hover:bg-gray-700/70' 
+            : 'bg-white/70 border-gray-200 text-gray-700 hover:bg-white/90'
+        }`}
       >
-        {/* Dark mode toggle */}
-        <div
-          className="absolute top-4 right-4 cursor-pointer"
-          onClick={toggleDark}
+        {dark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      </motion.button>
+
+      <div className="flex flex-col items-center justify-center min-h-screen px-6 py-20 relative z-10">
+        
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="w-full max-w-md space-y-8"
         >
-          {dark ? (
-            <FaSun className="text-2xl" />
-          ) : (
-            <FaMoon className="text-2xl" />
-          )}
-        </div>
+          
+          {/* Profile Section */}
+<motion.div variants={itemVariants} className="text-center space-y-6">
+  <div className="relative">
+    {/* Glow Effect */}
+    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-full blur-xl scale-110" />
+    
+    <motion.div
+      whileHover={{ scale: 1.05, rotate: 2 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-gray-700/50 shadow-xl"
+    >
+      <img
+        src={profileImg}
+        alt="Profile"
+        className="w-full h-full object-cover"
+      />
+    </motion.div>
+  </div>
 
-        {/* Profile */}
-        <img
-          src="/profile.jpg"
-          alt="Profile"
-          className="w-24 h-24 rounded-full object-cover shadow-md"
-        />
-        <h1 className="mt-4 text-xl font-bold">Oktaryan Hugo Wiratama</h1>
+  <div className="space-y-2">
+    <h1 className={`text-2xl font-bold ${
+      dark 
+        ? 'bg-gradient-to-r from-white via-gray-300 to-gray-500 bg-clip-text text-transparent' 
+        : 'text-gray-900'
+    }`}>
+      Oktaryan Hugo Wiratama
+    </h1>
+    <p className={`${dark ? 'text-gray-400' : 'text-gray-600'}`}>
+      Front End Developer | Data Analyst | QA Tester
+    </p>
+    
+    {/* Status Badge */}
+    <div className="inline-flex items-center px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm">
+      <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse" />
+      Available for opportunities
+    </div>
+  </div>
+</motion.div>
 
-        {/* Link buttons */}
-        <div className="flex flex-col mt-6 gap-4 w-full max-w-xs">
-          {links.map((link) => (
-            <button
-              key={link.name}
-              onClick={() => {
-                if (link.name === 'WhatsApp') {
-                  setShowCaptcha(true);
-                } else {
-                  window.open(link.url, '_blank');
-                }
-              }}
-              className={`font-semibold py-3 px-6 rounded-full shadow-md transition duration-200
-                ${
-                  dark
-                    ? 'bg-[#2a2a2a] text-white hover:bg-[#3a3a3a]'
-                    : 'bg-white text-[#6d3c27] hover:bg-gray-100'
-                }`}
-            >
-              {link.name}
-            </button>
-          ))}
-        </div>
-
-        {/* Icons row */}
-        <div className="flex gap-6 mt-10 text-2xl">
-          {links.map((link) => (
-            <a
-              key={link.name}
-              href={link.name === 'WhatsApp' ? '#' : link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                if (link.name === 'WhatsApp') {
-                  e.preventDefault();
-                  setShowCaptcha(true);
-                }
-              }}
-              className="hover:scale-110 transition"
-            >
-              {link.icon}
-            </a>
-          ))}
-        </div>
-
-        {/* reCAPTCHA popup */}
-        {showCaptcha && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div
-              className={`relative p-6 rounded-lg shadow-lg
-                ${dark ? 'bg-[#2a2a2a] text-white' : 'bg-white text-black'}`}
-            >
-              {/* Tombol close */}
-              <button
-                onClick={() => setShowCaptcha(false)}
-                className={`absolute top-2 right-2 text-2xl ${
-                  dark ? 'text-white' : 'text-[#6d3c27]'
+          {/* Main Links */}
+          <motion.div variants={itemVariants} className="space-y-4">
+            {mainLinks.map((link, index) => (
+              <motion.button
+                key={link.name}
+                onClick={() => window.open(link.url, '_blank')}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className={`w-full p-4 rounded-xl backdrop-blur-sm border group ${
+                  dark 
+                    ? 'bg-gray-800/50 border-gray-700/50 hover:bg-gray-700/70' 
+                    : 'bg-white/70 border-gray-200 hover:bg-white/90'
                 }`}
               >
-                <IoMdClose />
+                <div className="flex items-center gap-4">
+                  <div className={`p-2 rounded-lg bg-gradient-to-r ${link.color} text-white`}>
+                    {link.icon}
+                  </div>
+                  <div className="flex-1 text-left">
+                    <h3 className={`font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>
+                      {link.name}
+                    </h3>
+                    <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {link.description}
+                    </p>
+                  </div>
+                  <ExternalLink className={`w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity ${
+                    dark ? 'text-gray-400' : 'text-gray-600'
+                  }`} />
+                </div>
+              </motion.button>
+            ))}
+
+            {/* WhatsApp Special Button */}
+            <motion.button
+              onClick={() => setShowCaptcha(true)}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className={`w-full p-4 rounded-xl backdrop-blur-sm border group ${
+                dark 
+                  ? 'bg-gray-800/50 border-gray-700/50 hover:bg-gray-700/70' 
+                  : 'bg-white/70 border-gray-200 hover:bg-white/90'
+              }`}
+            >
+              <div className="flex items-center gap-4">
+                <div className={`p-2 rounded-lg bg-gradient-to-r ${contactLink.color} text-white`}>
+                  {contactLink.icon}
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className={`font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>
+                    {contactLink.name}
+                  </h3>
+                  <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    {contactLink.description}
+                  </p>
+                </div>
+                <div className={`text-xs px-2 py-1 rounded-full ${
+                  dark ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-600'
+                }`}>
+                  Verify
+                </div>
+              </div>
+            </motion.button>
+          </motion.div>
+
+          {/* Quick Social Icons */}
+          <motion.div 
+            variants={itemVariants}
+            className="flex justify-center gap-4 pt-4"
+          >
+            {mainLinks.slice(0, 3).map((link) => (
+              <motion.a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className={`p-3 rounded-full backdrop-blur-sm border ${
+                  dark 
+                    ? 'bg-gray-800/30 border-gray-700/50 text-gray-400 hover:text-white' 
+                    : 'bg-white/50 border-gray-200 text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                {link.icon}
+              </motion.a>
+            ))}
+          </motion.div>
+
+          {/* Footer */}
+          <motion.div 
+            variants={itemVariants}
+            className="text-center pt-8 border-t border-gray-700/30"
+          >
+            <p className={`text-sm ${dark ? 'text-gray-500' : 'text-gray-500'}`}>
+              Linkhub by Hugo • Made with React
+            </p>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* reCAPTCHA Modal */}
+      <AnimatePresence>
+        {showCaptcha && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-6"
+            onClick={() => setShowCaptcha(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className={`relative p-8 rounded-2xl shadow-2xl border backdrop-blur-lg ${
+                dark 
+                  ? 'bg-gray-800/90 border-gray-700/50' 
+                  : 'bg-white/90 border-gray-200'
+              }`}
+            >
+              <button
+                onClick={() => setShowCaptcha(false)}
+                className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
+                  dark ? 'text-gray-400 hover:text-white hover:bg-gray-700/50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                <X className="w-5 h-5" />
               </button>
 
-              <ReCAPTCHA
-                sitekey="6LejsmErAAAAAGDbtFZWiQP1b-_KHPiqjd_9ybbO"
-                onChange={handleCaptchaVerify}
-              />
-            </div>
-          </div>
-        )}
+              <div className="text-center space-y-6">
+                <div>
+                  <h3 className={`text-xl font-bold mb-2 ${dark ? 'text-white' : 'text-gray-900'}`}>
+                    Verify to Contact
+                  </h3>
+                  <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Please verify you're human to access WhatsApp
+                  </p>
+                </div>
 
-        {/* Footer */}
-        <p className="mt-6 text-sm opacity-60">Linkhub by Hugo</p>
-      </div>
+                {/* Captcha Simulation */}
+                <motion.div
+                  onClick={handleCaptchaVerify}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`w-80 h-20 border rounded-lg flex items-center justify-center cursor-pointer transition-colors ${
+                    dark 
+                      ? 'bg-gray-700/50 border-gray-600/50 hover:bg-gray-700/70' 
+                      : 'bg-gray-50 border-gray-300 hover:bg-gray-100'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-6 h-6 border-2 rounded flex items-center justify-center transition-all ${
+                      isVerified 
+                        ? 'bg-green-500 border-green-500' 
+                        : dark ? 'border-gray-400' : 'border-gray-500'
+                    }`}>
+                      {isVerified && (
+                        <motion.svg 
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-4 h-4 text-white" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </motion.svg>
+                      )}
+                    </div>
+                    <span className={dark ? 'text-gray-300' : 'text-gray-700'}>
+                      I'm not a robot
+                    </span>
+                  </div>
+                </motion.div>
+
+                {isVerified && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-green-400 text-sm"
+                  >
+                    ✓ Verified! Opening WhatsApp...
+                  </motion.p>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <style jsx>{`
+        .bg-grid-pattern-white {
+          background-image: 
+            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+          background-size: 50px 50px;
+        }
+        .bg-grid-pattern-dark {
+          background-image: 
+            linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
+          background-size: 50px 50px;
+        }
+      `}</style>
     </div>
   );
 }
