@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import profileImg from './assets/profile.jpg'; 
 import { 
   Github, 
   Linkedin, 
-  Globe, 
-  MessageCircle, 
+  Globe,  
   Moon, 
   Sun, 
   X, 
@@ -14,20 +13,7 @@ import {
 
 function App() {
   const [dark, setDark] = useState(true);
-  const [showCaptcha, setShowCaptcha] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
-
   const toggleDark = () => setDark(!dark);
-
-  const handleCaptchaVerify = () => {
-    setIsVerified(!isVerified);
-    if (!isVerified) {
-      setTimeout(() => {
-        window.open('https://wa.me/6281219456916', '_blank');
-        setShowCaptcha(false);
-      }, 500);
-    }
-  };
 
   const mainLinks = [
     { 
@@ -63,13 +49,6 @@ function App() {
       category: 'secondary'
     }
   ];
-
-  const contactLink = { 
-    name: 'WhatsApp', 
-    icon: <MessageCircle className="w-5 h-5" />, 
-    description: 'Direct message for quick chat',
-    color: 'from-green-500 to-green-600'
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -132,23 +111,23 @@ function App() {
         >
           
           {/* Profile Section */}
-<motion.div variants={itemVariants} className="text-center space-y-6">
-  <div className="relative">
-    {/* Glow Effect */}
-    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-full blur-xl scale-110" />
+          <motion.div variants={itemVariants} className="text-center space-y-6">
+            <div className="relative">
+            {/* Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-full blur-xl scale-110" />
     
-    <motion.div
-      whileHover={{ scale: 1.05, rotate: 2 }}
-      transition={{ type: "spring", stiffness: 300 }}
-      className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-gray-700/50 shadow-xl"
-    >
-      <img
-        src={profileImg}
-        alt="Profile"
-        className="w-full h-full object-cover"
-      />
-    </motion.div>
-  </div>
+            <motion.div
+              whileHover={{ scale: 1.05, rotate: 2 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-gray-700/50 shadow-xl"
+            >
+              <img
+                src={profileImg}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          </div>
 
   <div className="space-y-2">
     <h1 className={`text-2xl font-bold ${
@@ -159,13 +138,13 @@ function App() {
       Oktaryan Hugo Wiratama
     </h1>
     <p className={`${dark ? 'text-gray-400' : 'text-gray-600'}`}>
-      Front-End Web Developer | Data Analyst | Software QA
+      DevOps Engineer | Front-End Web Developer | Data Analyst | Software QA | UI/UX
     </p>
     
     {/* Status Badge */}
-    <div className="inline-flex items-center px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm">
-      <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse" />
-      Available for opportunities
+    <div className="inline-flex items-center px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm">
+      <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse" />
+      Currently working as a DevOps Engineer
     </div>
   </div>
 </motion.div>
@@ -202,37 +181,6 @@ function App() {
                 </div>
               </motion.button>
             ))}
-
-            {/* WhatsApp Special Button */}
-            <motion.button
-              onClick={() => setShowCaptcha(true)}
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className={`w-full p-4 rounded-xl backdrop-blur-sm border group ${
-                dark 
-                  ? 'bg-gray-800/50 border-gray-700/50 hover:bg-gray-700/70' 
-                  : 'bg-white/70 border-gray-200 hover:bg-white/90'
-              }`}
-            >
-              <div className="flex items-center gap-4">
-                <div className={`p-2 rounded-lg bg-gradient-to-r ${contactLink.color} text-white`}>
-                  {contactLink.icon}
-                </div>
-                <div className="flex-1 text-left">
-                  <h3 className={`font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>
-                    {contactLink.name}
-                  </h3>
-                  <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {contactLink.description}
-                  </p>
-                </div>
-                <div className={`text-xs px-2 py-1 rounded-full ${
-                  dark ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-600'
-                }`}>
-                  Verify
-                </div>
-              </div>
-            </motion.button>
           </motion.div>
 
           {/* Quick Social Icons */}
@@ -270,112 +218,6 @@ function App() {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* reCAPTCHA Modal */}
-      <AnimatePresence>
-        {showCaptcha && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-6"
-            onClick={() => setShowCaptcha(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className={`relative p-8 rounded-2xl shadow-2xl border backdrop-blur-lg ${
-                dark 
-                  ? 'bg-gray-800/90 border-gray-700/50' 
-                  : 'bg-white/90 border-gray-200'
-              }`}
-            >
-              <button
-                onClick={() => setShowCaptcha(false)}
-                className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
-                  dark ? 'text-gray-400 hover:text-white hover:bg-gray-700/50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="text-center space-y-6">
-                <div>
-                  <h3 className={`text-xl font-bold mb-2 ${dark ? 'text-white' : 'text-gray-900'}`}>
-                    Verify to Contact
-                  </h3>
-                  <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Please verify you're human to access WhatsApp
-                  </p>
-                </div>
-
-                {/* Captcha Simulation */}
-                <motion.div
-                  onClick={handleCaptchaVerify}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-80 h-20 border rounded-lg flex items-center justify-center cursor-pointer transition-colors ${
-                    dark 
-                      ? 'bg-gray-700/50 border-gray-600/50 hover:bg-gray-700/70' 
-                      : 'bg-gray-50 border-gray-300 hover:bg-gray-100'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-6 h-6 border-2 rounded flex items-center justify-center transition-all ${
-                      isVerified 
-                        ? 'bg-green-500 border-green-500' 
-                        : dark ? 'border-gray-400' : 'border-gray-500'
-                    }`}>
-                      {isVerified && (
-                        <motion.svg 
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="w-4 h-4 text-white" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </motion.svg>
-                      )}
-                    </div>
-                    <span className={dark ? 'text-gray-300' : 'text-gray-700'}>
-                      I'm not a robot
-                    </span>
-                  </div>
-                </motion.div>
-
-                {isVerified && (
-                  <motion.p
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-green-400 text-sm"
-                  >
-                    ✓ Verified! Opening WhatsApp...
-                  </motion.p>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <style jsx>{`
-        .bg-grid-pattern-white {
-          background-image: 
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
-          background-size: 50px 50px;
-        }
-        .bg-grid-pattern-dark {
-          background-image: 
-            linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
-          background-size: 50px 50px;
-        }
-      `}</style>
     </div>
   );
 }
