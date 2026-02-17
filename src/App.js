@@ -138,7 +138,7 @@ function App() {
       Oktaryan Hugo Wiratama
     </h1>
     <p className={`${dark ? 'text-gray-400' : 'text-gray-600'}`}>
-      DevOps Engineer | Front-End Web Developer | Data Analyst | Software QA | UI/UX
+      DevOps Engineer | System Administrator | Front-End Web Developer | Data Analyst | Quality Assurance
     </p>
     
     {/* Status Badge */}
